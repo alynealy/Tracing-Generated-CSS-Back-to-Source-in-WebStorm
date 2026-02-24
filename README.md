@@ -93,3 +93,183 @@ task1/
 ├── vite.config.js
 └── package.json
 ```
+# Task 2 – DevTools CSS Investigation Report
+
+## Selected Element: `.hero__btn` — "Start Your Journey" button
+
+This element was chosen because its final computed styles result from multiple interacting sources:
+- SCSS variables compiled to literal values
+- A mixin (`@mixin flex-center`) inlined into the parent
+- Nested SCSS rules flattened into separate selectors
+- A `hover` pseudo-class rule that overrides base styles
+- User agent stylesheet defaults that are partially overridden
+
+---
+
+## Five CSS Properties — Step-by-Step Analysis
+
+---
+
+### 1. `background-color: rgb(255, 255, 255)`
+
+**Computed value (DevTools → Computed tab):**
+`background-color: rgb(255, 255, 255)`
+
+**Styles panel:**
+The winning rule is `.hero__btn` with `background: #FFFFFF`, sourced from `style12.scss:141`.
+A lower-priority rule from the user agent stylesheet sets `background-color: buttonface` but is overridden.
+
+**Generated CSS location:**
+`src/style12.css` — `.hero__btn { background: #FFFFFF; }`
+
+**Trace to authored source:**
+In `style12.scss`, the variable `$white: #FFFFFF` is used:
+```scss
+.hero__btn {
+  background: $white;  // style12.scss ~line 141
+}
+```
+The sourcemap resolves `style12.scss:141` → the compiled `.hero__btn` rule in `src/style12.css` → the final `dist/assets/style-[hash].css`.
+
+---
+
+### 2. `border-radius: 50px`
+
+**Computed value (DevTools → Computed tab):**
+`border-radius: 50px` (shown as individual sides: `border-top-left-radius`, etc., all `50px`)
+
+**Styles panel:**
+Rule `.hero__btn { border-radius: 50px; }` from `style12.scss:141`.
+No other rule competes for this property.
+
+**Generated CSS location:**
+`src/style12.css` — `.hero__btn { border-radius: 50px; }`
+
+**Trace to authored source:**
+In `style12.scss`:
+```scss
+.hero__btn {
+  border-radius: 50px;  // literal value, no variable
+}
+```
+Direct 1-to-1 mapping — this value was not transformed, just copied through the pipeline. Sourcemap correctly points to `style12.scss`.
+
+---
+
+### 3. `color: rgb(255, 107, 107)`
+
+**Computed value (DevTools → Computed tab):**
+`color: rgb(255, 107, 107)`
+
+**Styles panel:**
+Rule `.hero__btn { color: #FF6B6B; }` from `style12.scss:141`.
+The hex `#FF6B6B` is displayed by DevTools as `rgb(255, 107, 107)` in the Computed tab.
+
+**Generated CSS location:**
+`src/style12.css` — `.hero__btn { color: #FF6B6B; }`
+
+**Trace to authored source:**
+In `style12.scss`, the variable `$primary` is used:
+```scss
+$primary: #FF6B6B;
+
+.hero__btn {
+  color: $primary;  // style12.scss ~line 141
+}
+```
+The variable `$primary` was resolved by Sass CLI to `#FF6B6B`. The sourcemap points back to `style12.scss:141` but the variable declaration itself (`$primary: #FF6B6B`) is on a different line (line ~2). DevTools only shows the usage site, not the variable definition.
+
+---
+
+### 4. `padding: 15px 40px`
+
+**Computed value (DevTools → Computed tab):**
+`padding-top: 15px`, `padding-bottom: 15px`, `padding-left: 40px`, `padding-right: 40px`
+
+**Styles panel:**
+Rule `.hero__btn { padding: 15px 40px; }` from `style12.scss:141`.
+
+**Generated CSS location:**
+`src/style12.css` — `.hero__btn { padding: 15px 40px; }`
+
+**Trace to authored source:**
+In `style12.scss`:
+```scss
+.hero__btn {
+  padding: 15px 40px;  // literal value
+}
+```
+The shorthand `padding: 15px 40px` is expanded by DevTools into four individual `padding-*` properties in the Computed tab. The sourcemap points to the shorthand declaration in `style12.scss`, not to the individual sides — those don't exist in the source at all.
+
+---
+
+### 5. `font-size: 18px`
+
+**Computed value (DevTools → Computed tab):**
+`font-size: 18px`
+
+**Styles panel:**
+Rule `.hero__btn { font-size: 18px; }` from `style12.scss:141`.
+User agent stylesheet also declares a `font-size` for `button` elements but is overridden.
+
+**Generated CSS location:**
+`src/style12.css` — `.hero__btn { font-size: 18px; }`
+
+**Trace to authored source:**
+In `style12.scss`:
+```scss
+.hero__btn {
+  font-size: 18px;  // literal value, no variable
+}
+```
+Direct mapping. Sourcemap resolves correctly to `style12.scss`.
+
+---
+
+## Three Cases Where Mapping Breaks Down
+
+---
+
+### Case 1: SCSS Variables — Sourcemap Points to Usage, Not Declaration
+
+**Example:** `color: rgb(255, 107, 107)` on `.hero__btn`
+
+In DevTools, the Styles panel shows `color: #FF6B6B` and the sourcemap points to the line in `style12.scss` where `color: $primary` appears. However, the **actual value** `#FF6B6B` comes from the variable declaration `$primary: #FF6B6B` on a completely different line (line ~2 of the SCSS file).
+
+There is no way to click through from the computed value to the variable declaration — DevTools only shows the usage site. If the variable were defined in a separate `_variables.scss` partial, it would be even harder to find. The mapping is **indirect**: you can find where the property is used, but not where the value originates.
+This means if a developer sees an unexpected color and wants to change it globally, they cannot click through from DevTools to the variable declaration. They must manually search the SCSS file for $primary.
+---
+
+### Case 2: Shorthand Properties Expanded by DevTools
+
+**Example:** `padding: 15px 40px` → shown as four separate `padding-*` properties in Computed tab
+
+The authored SCSS contains a single shorthand declaration `padding: 15px 40px`. The browser expands this into `padding-top`, `padding-right`, `padding-bottom`, `padding-left` internally. DevTools shows all four in the Computed tab, each pointing back to the same sourcemap location (the shorthand line in `style12.scss`).
+
+The mapping is **ambiguous**: the individual computed properties (`padding-left: 40px`) do not correspond to any single authored line — they are derived from the shorthand. A developer reading the Computed tab might not immediately realize the value comes from a shorthand, especially if other rules override individual sides.
+
+---
+
+### Case 3: Mixins — Generated CSS Has No Direct Source Line
+
+**Example:** `.hero` uses `@include flex-center` which expands to three declarations
+
+In `style12.scss`, the mixin is defined:
+```scss
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+And used inside `.hero`:
+```scss
+.hero {
+  @include flex-center;
+}
+```
+
+In the generated `src/style12.css`, the three declarations appear directly inside `.hero { ... }` with no indication they came from a mixin. The sourcemap points to the `@include flex-center` line in `style12.scss`, but does **not** point to the mixin definition block where the actual property values are written.
+
+If the mixin had conditional logic or accepted arguments, the mapping would break down further — DevTools would show a computed value with no clear path back to the authored logic that produced it. This means if a developer inspects `justify-content: center` on the hero element in DevTools and clicks the sourcemap link, they land on the `@include flex-center` line — not on the `justify-content: center` line inside the mixin body. They must then manually find the mixin definition to understand where the value comes from and how to change it. For mixins with arguments or conditional logic, this disconnect between the sourcemap location and the actual value source becomes even more significant.
