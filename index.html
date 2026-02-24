@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust - Travel Blog</title>
+   <!-- <link rel="stylesheet" href="./style.css"> -->
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav__container">
+            <a href="#" class="nav__logo">
+                <span class="nav__logo-icon"></span>
+                Wanderlust
+            </a>
+            <ul class="nav__menu">
+                <li><a href="#home" class="nav__link">Home</a></li>
+                <li><a href="#destinations" class="nav__link">Destinations</a></li>
+                <li><a href="#stories" class="nav__link">Stories</a></li>
+                <li><a href="#contact" class="nav__link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero__overlay"></div>
+        <div class="hero__content">
+            <h1 class="hero__title">Explore the <span class="hero__title--highlight">World</span></h1>
+            <p class="hero__subtitle">Discover amazing places and create unforgettable memories</p>
+            <button class="hero__btn">Start Your Journey</button>
+        </div>
+    </section>
+
+    <section id="destinations" class="destinations">
+        <h2 class="destinations__title">Popular <span>Destinations</span></h2>
+        <p class="destinations__subtitle">Hand-picked locations for your next adventure</p>
+
+        <div class="destinations__grid">
+            <div class="card">
+                <div class="card__image">
+                    <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400" alt="Bali">
+                    <span class="card__badge">Hot</span>
+                </div>
+                <div class="card__content">
+                    <h3 class="card__title">Bali, Indonesia</h3>
+                    <div class="card__rating">★★★★★ <span>(234)</span></div>
+                    <p class="card__text">Tropical paradise with stunning beaches and ancient temples.</p>
+                    <div class="card__footer">
+                        <span class="card__price">From $899</span>
+                        <button class="card__btn">Explore</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card__image">
+                    <img src="https://images.unsplash.com/photo-1531218150217-54595bc2b934?w=400" alt="Switzerland">
+                    <span class="card__badge card__badge--new"> New</span>
+                </div>
+                <div class="card__content">
+                    <h3 class="card__title">Swiss Alps</h3>
+                    <div class="card__rating">★★★★★ <span>(189)</span></div>
+                    <p class="card__text">Breathtaking mountain views and world-class skiing.</p>
+                    <div class="card__footer">
+                        <span class="card__price">From $1,299</span>
+                        <button class="card__btn">Explore</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kyoto -->
+            <div class="card">
+                <div class="card__image">
+                    <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400" alt="Japan">
+                    <span class="card__badge card__badge--top"> Top</span>
+                </div>
+                <div class="card__content">
+                    <h3 class="card__title">Kyoto, Japan</h3>
+                    <div class="card__rating">★★★★★ <span>(312)</span></div>
+                    <p class="card__text">Ancient temples, cherry blossoms, and traditional culture.</p>
+                    <div class="card__footer">
+                        <span class="card__price">From $1,099</span>
+                        <button class="card__btn">Explore</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="stories" class="stories">
+        <h2 class="stories__title">Travel <span>Stories</span></h2>
+        <p class="stories__subtitle">Latest adventures from our community</p>
+
+        <div class="stories__grid">
+            <div class="story">
+                <img src="https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmFsaXxlbnwwfHwwfHx8MA%3D%3D" alt="Story" class="story__image">
+                <div class="story__content">
+                    <div class="story__meta">
+                        <span> March 15, 2024</span>
+                        <span> Sarah</span>
+                    </div>
+                    <h3 class="story__title">My Bali Adventure</h3>
+                    <p class="story__text">Sunrise treks and sunset dinners in paradise...</p>
+                    <a href="#" class="story__link">Read More →</a>
+                </div>
+            </div>
+            <div class="story">
+               <img src="https://images.unsplash.com/photo-1519931760384-a96fedd8dfa9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YWxwc3xlbnwwfHwwfHx8MA%3D%3D" alt="Story" class="story__image">
+                <div class="story__content">
+                    <div class="story__meta">
+                        <span> March 10, 2024</span>
+                        <span>Mike</span>
+                    </div>
+                    <h3 class="story__title">Swiss Winter Wonderland</h3>
+                    <p class="story__text">Skiing through fresh powder in the Alps...</p>
+                    <a href="#" class="story__link">Read More →</a>
+                </div>
+            </div>
+            <div class="story">
+                <img src="https://images.unsplash.com/photo-1579090814807-60808035e1cb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dGVuZXJpZmV8ZW58MHx8MHx8fDA%3D" alt="Story" class="story__image">
+                  <div class="story__content">
+                    <div class="story__meta">
+                        <span>March 5, 2024</span>
+                        <span>Elena</span>
+                    </div>
+                    <h3 class="story__title">Venice Canals</h3>
+                    <p class="story__text">Gondola rides and Italian gelato...</p>
+                    <a href="#" class="story__link">Read More →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="newsletter">
+        <div class="newsletter__container">
+            <h2 class="newsletter__title">Get <span>Inspired</span></h2>
+            <p class="newsletter__text">Subscribe for travel tips and exclusive deals</p>
+            <form class="newsletter__form">
+                <input type="email" placeholder="Your email address" class="newsletter__input">
+                <button type="submit" class="newsletter__btn">Subscribe</button>
+            </form>
+        </div>
+    </section>
+    <footer class="footer">
+        <p class="footer__text">2024 Wanderlust Travel Blog</p>
+        <div class="footer__links">
+            <a href="#" class="footer__link">Facebook</a>
+            <a href="#" class="footer__link">Instagram</a>
+            <a href="#" class="footer__link">Twitter</a>
+        </div>
+    </footer>
+    <script type="module" src="/src/main1.js"></script>
+</body>
+</html>
